@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidarFirmaXml", "ValidarFirmaXml\ValidarFirmaXml.csproj", "{CF277CD9-26AE-43EC-856E-91D361841ADA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF277CD9-26AE-43EC-856E-91D361841ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF277CD9-26AE-43EC-856E-91D361841ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF277CD9-26AE-43EC-856E-91D361841ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF277CD9-26AE-43EC-856E-91D361841ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FA15654-3067-4031-98DC-7A8C03288E68}
+	EndGlobalSection
+EndGlobal
