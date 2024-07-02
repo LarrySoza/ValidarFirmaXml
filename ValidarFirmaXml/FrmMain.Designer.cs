@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.btnValidarXml = new System.Windows.Forms.Button();
-            this.btnValidarXmlDeZip = new System.Windows.Forms.Button();
             this.txtInfo = new System.Windows.Forms.RichTextBox();
+            this.btnExtraerClavePublica = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnValidarXml
@@ -43,16 +44,6 @@
             this.btnValidarXml.UseVisualStyleBackColor = true;
             this.btnValidarXml.Click += new System.EventHandler(this.btnValidarXml_Click);
             // 
-            // btnValidarXmlDeZip
-            // 
-            this.btnValidarXmlDeZip.Location = new System.Drawing.Point(120, 12);
-            this.btnValidarXmlDeZip.Name = "btnValidarXmlDeZip";
-            this.btnValidarXmlDeZip.Size = new System.Drawing.Size(102, 23);
-            this.btnValidarXmlDeZip.TabIndex = 4;
-            this.btnValidarXmlDeZip.Text = "Validar XML ZIP";
-            this.btnValidarXmlDeZip.UseVisualStyleBackColor = true;
-            this.btnValidarXmlDeZip.Click += new System.EventHandler(this.btnValidarXmlDeZip_Click);
-            // 
             // txtInfo
             // 
             this.txtInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -61,19 +52,32 @@
             this.txtInfo.Location = new System.Drawing.Point(14, 41);
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
-            this.txtInfo.Size = new System.Drawing.Size(632, 193);
+            this.txtInfo.Size = new System.Drawing.Size(632, 241);
             this.txtInfo.TabIndex = 5;
             this.txtInfo.Text = "";
+            // 
+            // btnExtraerClavePublica
+            // 
+            this.btnExtraerClavePublica.Location = new System.Drawing.Point(513, 12);
+            this.btnExtraerClavePublica.Name = "btnExtraerClavePublica";
+            this.btnExtraerClavePublica.Size = new System.Drawing.Size(133, 23);
+            this.btnExtraerClavePublica.TabIndex = 6;
+            this.btnExtraerClavePublica.Text = "Guardar Clave Publica";
+            this.btnExtraerClavePublica.UseVisualStyleBackColor = true;
+            this.btnExtraerClavePublica.Visible = false;
+            this.btnExtraerClavePublica.Click += new System.EventHandler(this.btnExtraerClavePublica_Click);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 246);
+            this.ClientSize = new System.Drawing.Size(658, 294);
+            this.Controls.Add(this.btnExtraerClavePublica);
             this.Controls.Add(this.txtInfo);
-            this.Controls.Add(this.btnValidarXmlDeZip);
             this.Controls.Add(this.btnValidarXml);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(674, 333);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Validar Xml";
@@ -83,8 +87,8 @@
 
         #endregion
         private System.Windows.Forms.Button btnValidarXml;
-        private System.Windows.Forms.Button btnValidarXmlDeZip;
         private System.Windows.Forms.RichTextBox txtInfo;
+        private System.Windows.Forms.Button btnExtraerClavePublica;
     }
 }
 

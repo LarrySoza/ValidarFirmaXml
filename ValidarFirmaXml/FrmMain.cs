@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -17,42 +18,34 @@ namespace ValidarFirmaXml
 {
     public partial class FrmMain : Form
     {
+        X509Certificate2 _certificado;
+        
         public FrmMain()
         {
             InitializeComponent();
+            _certificado = null;
         }
 
         private void btnValidarXml_Click(object sender, EventArgs e)
         {
             using (var openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "XML (*.xml)|*.xml";
+                openFileDialog.Filter = "XML y ZIP (*.xml;*.xml)|*.xml;*.zip";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        ShowInfoXml(openFileDialog.FileName);
-                    }
-                    catch (Exception ex)
-                    {
-                        txtInfoAppendTex(ex.Message, Color.Red);
-                    }
-                }
-            }
-        }
+                        if (Path.GetExtension(openFileDialog.FileName).ToLower() == ".xml")
+                        {
+                            ShowInfoXml(openFileDialog.FileName);
+                        }
+                        else
+                        {
+                            ShowInfoZipXml(openFileDialog.FileName);
+                        }
 
-        private void btnValidarXmlDeZip_Click(object sender, EventArgs e)
-        {
-            using (var openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "ZIP (*.zip)|*.zip";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        ShowInfoZipXml(openFileDialog.FileName);
+                        btnExtraerClavePublica.Visible = true;
                     }
                     catch (Exception ex)
                     {
@@ -69,7 +62,7 @@ namespace ValidarFirmaXml
 
             var _xml = File.ReadAllText(path, _encoding);
 
-            txtInfoAppendTex($"Encoding: ", Color.Black);
+            txtInfoAppendTex($"ENCODING: ", Color.Black, true);
             txtInfoAppendTex($"{_encoding}\n", Color.Blue);
 
             MostrarInfoXML(_xml);
@@ -82,22 +75,24 @@ namespace ValidarFirmaXml
 
             var _xml = LeerZipXml(File.ReadAllBytes(path), out _encoding);
 
-            txtInfoAppendTex($"Encoding: ", Color.Black);
+            txtInfoAppendTex($"ENCODING: ", Color.Black, true);
             txtInfoAppendTex($"{_encoding}\n", Color.Blue);
 
             MostrarInfoXML(_xml);
         }
 
-        private void txtInfoAppendTex(string txt, Color color)
+        private void txtInfoAppendTex(string txt, Color color, bool negrita = false)
         {
             txtInfo.SelectionStart = txtInfo.TextLength;
             txtInfo.SelectionLength = 0;
             txtInfo.SelectionColor = color;
+            txtInfo.SelectionFont = new Font(txtInfo.Font, negrita ? FontStyle.Bold : FontStyle.Regular);
             txtInfo.AppendText(txt);
         }
 
         private void MostrarInfoXML(String xml)
         {
+            txtInfoAppendTex($"ESTADO: ", Color.Black, true);
             if (VerificarFirmaXml(xml))
             {
                 txtInfoAppendTex("**** XMl valido ****\n", Color.Green);
@@ -107,12 +102,18 @@ namespace ValidarFirmaXml
                 txtInfoAppendTex("**** Xml adulterado ****\n", Color.Red);
             }
 
-            var _certificado = LeerCertificadoXml(xml);
+            _certificado = LeerCertificadoXml(xml);
 
-            txtInfoAppendTex($"SerialNumber: ", Color.Black);
+            txtInfoAppendTex($"SERIAL: ", Color.Black, true);
             txtInfoAppendTex($"{_certificado.SerialNumber}\n", Color.Blue);
 
-            txtInfoAppendTex($"Subject:\n", Color.Black);
+            txtInfoAppendTex($"FECHA EMISION: ", Color.Black, true);
+            txtInfoAppendTex($"{_certificado.GetEffectiveDateString()}\n", Color.Blue);
+
+            txtInfoAppendTex($"FECHA VENCIMIENTO: ", Color.Black, true);
+            txtInfoAppendTex($"{_certificado.GetExpirationDateString()}\n", DateTime.Now > _certificado.NotAfter ? Color.Red : Color.Blue);
+
+            txtInfoAppendTex($"ASUNTO:\n", Color.Black, true);
             var _InfoSubject = _certificado.Subject.Split(',');
 
             foreach (var item in _InfoSubject)
@@ -136,10 +137,12 @@ namespace ValidarFirmaXml
                     reader.Read();
 
                     var encoding = reader.GetAttribute("encoding");
+                    if(string.IsNullOrEmpty(encoding))
+                        encoding = "UTF-8";
 
                     var result = Encoding.GetEncoding(encoding);
-                    return result;
 
+                    return result;
                 }
             }
             catch
@@ -169,6 +172,9 @@ namespace ValidarFirmaXml
                             var reader = XmlReader.Create(ms, settings);
                             reader.Read();
                             var encodingName = reader.GetAttribute("encoding");
+
+                            if(string.IsNullOrEmpty(encodingName))
+                                encodingName = "UTF-8";
 
                             encoding = Encoding.GetEncoding(encodingName);
                         }
@@ -287,5 +293,28 @@ namespace ValidarFirmaXml
         }
 
         #endregion
+
+        private void btnExtraerClavePublica_Click(object sender, EventArgs e)
+        {
+            if (_certificado == null)
+                MessageBox.Show("Error al leer certificado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(_certificado.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+
+            using (var saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "Certificado (*.cer)|*.cer";
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(saveDialog.FileName, builder.ToString());
+                    MessageBox.Show("Certificado guardado correctamente", "Ok", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
     }
 }
