@@ -3,9 +3,8 @@ Aplicación Windows Forms que implementa métodos para validar firma y leer cert
 
 ## XML Valido
 
-![XmlValido](https://github.com/LarrySoza/ValidarFirmaXml/assets/67723048/60802b73-9624-49ef-b302-ce80bcf8e493)
+![XmlValido](https://github.com/LarrySoza/ValidarFirmaXml/assets/67723048/501327bb-3fea-4ba3-afd1-406d98783f64)
 
 ## XML No Valido
 
-![XmlNoValido](https://github.com/LarrySoza/ValidarFirmaXml/assets/67723048/dfd1e3aa-4401-4622-8025-5aff939e9ebd)
-
+![XmlNoValido](https://github.com/LarrySoza/ValidarFirmaXml/assets/67723048/50d3627b-9f1b-4b47-924e-c19870e7d495)
